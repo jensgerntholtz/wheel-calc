@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wheel calculator — Z/2Z</title>
+  <meta name="description" content="A calculator over the four-element wheel of fractions over Z/2Z: 0, 1, ∞ = 1/0, ⊥ = 0/0, where ⊥ means “no value”.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232d5bd7'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='monospace'%3E%E2%88%9E%3C/text%3E%3C/svg%3E">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <h1>Wheel calculator</h1>
+    <p>
+      Division by zero is defined. This is the wheel of fractions over Z/2Z:
+      <code>+</code> is xor, <code>·</code> is and, and the carrier is
+      <code>0</code>, <code>1</code>, <code>∞ = 1/0</code>, <code>⊥ = 0/0</code>.
+    </p>
+    <p class="symbols">
+      In plain terms: <code>∞</code> is the value of dividing by zero, and
+      <code>⊥</code> means <strong>“no value”</strong> — the calculation has no
+      answer at all. Ordinary arithmetic stops with an error at that point; the
+      wheel reports ⊥ instead.
+    </p>
+  </header>
+
+  <noscript>
+    <p class="hint">This calculator runs entirely in your browser and needs JavaScript.</p>
+  </noscript>
+
+  <main>
+    <section class="card" aria-labelledby="calc-title">
+      <h2 id="calc-title">Evaluate</h2>
+
+      <form id="eval-form" autocomplete="off">
+        <label class="sr-only" for="expr">Expression</label>
+        <input id="expr" class="display" name="expr" type="text" spellcheck="false"
+               autocapitalize="off" placeholder="1/0, 0/0, 1+1*0" autofocus>
+
+        <!-- Conventional calculator layout with a backspace key at the top
+             left. Keys the wheel cannot implement (digits 2-9 and the
+             decimal point) stay blank. -->
+        <div class="keypad" role="group" aria-label="Keypad">
+          <button type="button" data-action="backspace" aria-label="Backspace">⌫</button>
+          <button type="button" data-insert="(" aria-label="open parenthesis">(</button>
+          <button type="button" data-insert=")" aria-label="close parenthesis">)</button>
+          <button type="button" data-action="clear" aria-label="Clear all">AC</button>
+
+          <button type="button" class="key-blank" disabled aria-hidden="true" tabindex="-1"></button>
+          <button type="button" class="key-blank" disabled aria-hidden="true" tabindex="-1"></button>
+          <button type="button" class="key-blank" disabled aria-hidden="true" tabindex="-1"></button>
+          <button type="button" data-insert="/" aria-label="divide">÷</button>
+
+          <button type="button" class="key-blank" disabled aria-hidden="true" tabindex="-1"></button>
+          <button type="button" class="key-blank" disabled aria-hidden="true" tabindex="-1"></button>
+          <button type="button" class="key-blank" disabled aria-hidden="true" tabindex="-1"></button>
+          <button type="button" data-insert="*" aria-label="times">×</button>
+
+          <button type="button" data-insert="1">1</button>
+          <button type="button" class="key-blank" disabled aria-hidden="true" tabindex="-1"></button>
+          <button type="button" class="key-blank" disabled aria-hidden="true" tabindex="-1"></button>
+          <button type="button" data-insert="-" aria-label="minus">−</button>
+
+          <button type="button" data-insert="0">0</button>
+          <button type="button" class="key-blank" disabled aria-hidden="true" tabindex="-1"></button>
+          <button type="submit" class="primary" aria-label="Evaluate expression">=</button>
+          <button type="button" data-insert="+" aria-label="plus">+</button>
+        </div>
+      </form>
+
+      <div class="examples">
+        <span class="examples-label">Try</span>
+        <button type="button" data-example="1/0">1/0</button>
+        <button type="button" data-example="0/0">0/0</button>
+        <button type="button" data-example="1+1*0">1+1*0</button>
+        <button type="button" data-example="-(1/0)">-(1/0)</button>
+        <button type="button" data-example="//0">//0</button>
+        <button type="button" data-example="1//0">1//0</button>
+      </div>
+
+      <section id="console" aria-live="polite">
+        <p class="hint">Enter an expression above. <code>1/0</code> is ∞, <code>0/0</code> is ⊥ (“no value”), and every result is computed in your browser, not looked up.</p>
+      </section>
+    </section>
+
+    <div class="stack">
+      <section class="card" aria-labelledby="explain-title">
+        <h2 id="explain-title">Explainer</h2>
+        <div id="explainer">
+          <p class="hint">Evaluate an expression to see each wheel operation, then the same expression under conventional field arithmetic.</p>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="tables-title">
+        <h2 id="tables-title">Cayley tables</h2>
+        <p class="hint">Rows are the left operand, columns the right operand. Hover a cell to trace its row and column to the result; hover a header to light the whole row or column. The last table shows the unary rows <code>/x</code> and <code>−x</code>.</p>
+        <div id="tables">
+          <p class="hint">Loading tables…</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>Wheel of fractions over Z/2Z. The negative of <code>x</code> is <code>x</code>, so subtraction equals addition; <code>x − x = 0</code> fails only for ∞ and ⊥ (⊥ means “no value”).</p>
+  </footer>
+</body>
+</html>
