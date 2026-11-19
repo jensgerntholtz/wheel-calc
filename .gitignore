@@ -1,0 +1,6 @@
+node_modules
+.wrangler/
+wrangler.jsonc
+.env
+.env.*
+.DS_Store
